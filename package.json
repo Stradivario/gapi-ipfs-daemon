@@ -1,0 +1,36 @@
+{
+  "name": "@gapi/ipfs-daemon",
+  "version": "1.4.14",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Stradivario/gapi-ipfs-daemon.git"
+  },
+  "scripts": {
+    "postpublish": "git push -f ssh://git@gitlab.youvolio.com:522/gapi/gapi-ipfs-daemon.git && git push --tags && git push ssh://git@gitlab.youvolio.com:522/gapi/gapi-ipfs-daemon.git --tags"
+  },
+  "author": {
+    "name": "Kristian Tachev(Stradivario)",
+    "email": "kristiqn.tachev@gmail.com"
+  },
+  "keywords": [
+    "graphql",
+    "gapi",
+    "node",
+    "ipfs"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "http://gitlab.youvolio.com/gapi/gapi-ipfs-daemon/issues"
+  },
+  "module": "index.js",
+  "typings": "index.d.ts",
+  "dependencies": {
+    "ipfs": "^0.32.2",
+    "ipfsd-ctl": "^0.39.2"
+  },
+  "devDependencies": {
+    "@rxdi/core": "^0.0.266",
+    "@types/node": "^9.4.7",
+    "rxjs": "^6.2.1"
+  }
+}

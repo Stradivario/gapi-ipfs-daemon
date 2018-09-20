@@ -1,0 +1,54 @@
+import { Module, ModuleWithServices, Container, BootstrapLogger, ExitHandlerService } from "@rxdi/core";
+import IPFSFactory = require('ipfsd-ctl');
+import { IpfsDaemonInfoService } from './ipfs-daemon-node-info';
+import { IPFS_DAEMON } from "./ipfs-daemon-injection";
+
+@Module()
+export class IpfsDaemonModule {
+    public static forRoot(options?: { port: string; remote: boolean; type: 'go' | 'js' | 'proc' }): ModuleWithServices {
+        return {
+            module: IpfsDaemonModule,
+            services: [
+                {
+                    provide: IPFS_DAEMON,
+                    lazy: true,
+                    useFactory: async () => {
+                        return await new Promise((resolve) => {
+                            const infoService = Container.get(IpfsDaemonInfoService);
+                            const logger = Container.get(BootstrapLogger);
+                            const exitHandler = Container.get(ExitHandlerService);
+                            IPFSFactory.create(options)
+                                .spawn((err, ipfsd) => {
+                                    if (err) {
+                                        throw err;
+                                    }
+                                    exitHandler.onExitApp(['SIGTERM'])
+                                        .subscribe(() => {
+                                            ipfsd.stop();
+                                            ipfsd.killProcess();
+                                        });
+                                    ipfsd.api.id(function (err, id) {
+                                        if (err) { throw err; }
+                                        logger.log(id);
+                                        logger.log(`Ipfs daemon api running at: ${ipfsd.api.gatewayHost}:${ipfsd.api.apiPort}`);
+                                        logger.log(`Ipfs daemon gateway running at: ${ipfsd.api.gatewayHost}:${ipfsd.api.gatewayPort}`);
+                                        infoService.setInfo({
+                                            apiHost: ipfsd.api.apiHost,
+                                            apiPort: ipfsd.api.apiPort,
+                                            gatewayHost: ipfsd.api.gatewayHost,
+                                            gatewayPort: ipfsd.api.gatewayPort
+                                        });
+                                        resolve(ipfsd);
+                                    });
+                                });
+
+                        });
+                    }
+                }
+            ]
+        };
+    }
+}
+
+export * from './ipfs-daemon-injection';
+export * from './ipfs-daemon-node-info';
