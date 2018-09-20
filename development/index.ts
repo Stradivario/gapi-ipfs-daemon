@@ -1,14 +1,16 @@
 import { Module, ModuleWithServices, Container, BootstrapLogger, ExitHandlerService } from "@rxdi/core";
 import IPFSFactory = require('ipfsd-ctl');
 import { IpfsDaemonInfoService } from './ipfs-daemon-node-info';
-import { IPFS_DAEMON } from "./ipfs-daemon-injection";
+import { IPFS_DAEMON, Options } from "./ipfs-daemon-injection";
+import { PingService } from "./services";
 
 @Module()
 export class IpfsDaemonModule {
-    public static forRoot(options?: { port: string; remote: boolean; type: 'go' | 'js' | 'proc' }): ModuleWithServices {
+    public static forRoot(options?: Options): ModuleWithServices {
         return {
             module: IpfsDaemonModule,
             services: [
+                PingService,
                 {
                     provide: IPFS_DAEMON,
                     lazy: true,
@@ -52,3 +54,4 @@ export class IpfsDaemonModule {
 
 export * from './ipfs-daemon-injection';
 export * from './ipfs-daemon-node-info';
+export * from './services/index';

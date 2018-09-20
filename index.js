@@ -22,11 +22,13 @@ const core_1 = require("@rxdi/core");
 const IPFSFactory = require("ipfsd-ctl");
 const ipfs_daemon_node_info_1 = require("./ipfs-daemon-node-info");
 const ipfs_daemon_injection_1 = require("./ipfs-daemon-injection");
+const services_1 = require("./services");
 let IpfsDaemonModule = IpfsDaemonModule_1 = class IpfsDaemonModule {
     static forRoot(options) {
         return {
             module: IpfsDaemonModule_1,
             services: [
+                services_1.PingService,
                 {
                     provide: ipfs_daemon_injection_1.IPFS_DAEMON,
                     lazy: true,
@@ -74,3 +76,4 @@ IpfsDaemonModule = IpfsDaemonModule_1 = __decorate([
 exports.IpfsDaemonModule = IpfsDaemonModule;
 __export(require("./ipfs-daemon-injection"));
 __export(require("./ipfs-daemon-node-info"));
+__export(require("./services/index"));

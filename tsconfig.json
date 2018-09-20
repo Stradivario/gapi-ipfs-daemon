@@ -18,15 +18,13 @@
       "dom",
       "esnext.asynciterable"
     ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "skipLibCheck": true,
-    "types": []
-  },
-  "angularCompilerOptions": {
-    "annotateForClosureCompiler": true,
-    "strictMetadataEmit": true,
-    "skipTemplateCodegen": true,
-    "flatModuleOutFile": "gapi-ipfs.js",
-    "flatModuleId": "gapi-ipfs"
+    "types": [
+      "node"
+    ]
   },
   "files": [
     "./development/index.ts"
