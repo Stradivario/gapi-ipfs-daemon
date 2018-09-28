@@ -24,7 +24,7 @@ const ipfs_daemon_node_info_1 = require("./ipfs-daemon-node-info");
 const ipfs_daemon_injection_1 = require("./ipfs-daemon-injection");
 const services_1 = require("./services");
 let IpfsDaemonModule = IpfsDaemonModule_1 = class IpfsDaemonModule {
-    static forRoot(options) {
+    static forRoot(options = new ipfs_daemon_injection_1.Options()) {
         return {
             module: IpfsDaemonModule_1,
             services: [
@@ -37,8 +37,9 @@ let IpfsDaemonModule = IpfsDaemonModule_1 = class IpfsDaemonModule {
                             const infoService = core_1.Container.get(ipfs_daemon_node_info_1.IpfsDaemonInfoService);
                             const logger = core_1.Container.get(core_1.BootstrapLogger);
                             const exitHandler = core_1.Container.get(core_1.ExitHandlerService);
-                            IPFSFactory.create(options)
-                                .spawn((err, ipfsd) => {
+                            console.log(options.config);
+                            IPFSFactory.create({ remote: options.remote, port: options.port, type: options.type })
+                                .spawn({ config: options.config } || ipfs_daemon_injection_1.initIpfsDaemonOptions, (err, ipfsd) => {
                                 if (err) {
                                     throw err;
                                 }

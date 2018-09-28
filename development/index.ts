@@ -1,12 +1,12 @@
 import { Module, ModuleWithServices, Container, BootstrapLogger, ExitHandlerService } from "@rxdi/core";
 import IPFSFactory = require('ipfsd-ctl');
 import { IpfsDaemonInfoService } from './ipfs-daemon-node-info';
-import { IPFS_DAEMON, Options } from "./ipfs-daemon-injection";
+import { IPFS_DAEMON, Options, initIpfsDaemonOptions } from "./ipfs-daemon-injection";
 import { PingService } from "./services";
 
 @Module()
 export class IpfsDaemonModule {
-    public static forRoot(options?: Options): ModuleWithServices {
+    public static forRoot(options: Options = new Options()): ModuleWithServices {
         return {
             module: IpfsDaemonModule,
             services: [
@@ -19,8 +19,9 @@ export class IpfsDaemonModule {
                             const infoService = Container.get(IpfsDaemonInfoService);
                             const logger = Container.get(BootstrapLogger);
                             const exitHandler = Container.get(ExitHandlerService);
-                            IPFSFactory.create(options)
-                                .spawn((err, ipfsd) => {
+                            console.log(options.config);
+                            IPFSFactory.create({ remote: options.remote, port: options.port, type: options.type })
+                                .spawn({ config: options.config } || initIpfsDaemonOptions, (err, ipfsd) => {
                                     if (err) {
                                         throw err;
                                     }

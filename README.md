@@ -31,13 +31,23 @@ export class CoreModule { }
 
 ```
 
+> Default Gateway port: 8080; Default Api port: 5001; 
+
+
+
 `options` can be passed
 
 ```typescript
 IpfsDaemonModule.forRoot({
-    port: 123456,
     remote: true | false,
-    type: 'js' | 'go' | 'proc'
+    type: 'js' | 'go' | 'proc',
+    config: {
+        Addresses: {
+            API: '/ip4/127.0.0.1/tcp/5001',
+            Gateway: '/ip4/127.0.0.1/tcp/8080',
+            Swarm: [ '/ip4/0.0.0.0/tcp/4001', '/ip6/::/tcp/4001' ]
+        }
+    }
 })
 ```
 
