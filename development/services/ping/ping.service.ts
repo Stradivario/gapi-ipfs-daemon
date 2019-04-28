@@ -31,11 +31,17 @@ export class PingService {
     }
 
     httpObservable(link: string): Observable<IncomingMessage> {
-        return Observable.create(o => {
+        return new Observable(o => {
             if (link.includes('https')) {
-                HttpsGet(link, (r) => o.next(r));
+                HttpsGet(link, (r) => {
+                    o.next(r);
+                    o.complete();
+                });
             } else {
-                HttpGet(link, (r) => o.next(r));
+                HttpGet(link, (r) => {
+                    o.next(r);
+                    o.complete();
+                });
             }
         });
     }
